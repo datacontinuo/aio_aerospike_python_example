@@ -1,0 +1,25 @@
+version: "3"
+services:
+  server:
+    container_name: server
+    image: polyglot.dev/server:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    volumes:
+      - "./src:/app"
+  aerospike:
+      hostname: aerospike
+      container_name: aerospike
+      ports: 
+          - 3000-3002:3000-3002
+      image: aerospike:ce-6.2.0.2
+      volumes:
+        - ./data/aerospike:/opt/aerospike/data
+        - ./conf/:/opt/aerospike/etc/
+      command: 
+        - --config-file  
+        - /opt/aerospike/etc/default.conf
