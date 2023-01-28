@@ -1,0 +1,6 @@
+names
+aio_aerospike_python
+fastapi
+pydantic
+uvicorn
+aerospike

@@ -1,8 +1,21 @@
 version: "3"
 services:
+  data_generator:
+    container_name: data_generator
+    image: aio_aerospike_python_example/server:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    command: ["python", "generate_data.py"]
+    volumes:
+      - "./src:/app"
+    depends_on:
+      - aerospike
   server:
     container_name: server
-    image: polyglot.dev/server:latest
+    image: aio_aerospike_python_example/server:latest
     build: 
       context: .
       dockerfile: Dockerfile.dev
@@ -11,6 +24,8 @@ services:
     command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     volumes:
       - "./src:/app"
+    depends_on:
+      - aerospike
   aerospike:
       hostname: aerospike
       container_name: aerospike
